@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient, ObjectID } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const app = express();
 
 const uri = "mongodb+srv://satya:satya@cluster0.8thgg4a.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
@@ -51,9 +51,10 @@ app.get('/read', async (req, res) => {
 // Update
 app.put('/update/:id', async (req, res) => {
     try {
-        const id = req.params.id;
+        const id = parseInt(req.params.id); // Convert id to integer if needed
         const data = req.body;
-        const result = await collection.updateOne({id: int(id) }, { $set: data });
+        delete data._id; // Exclude _id field from update
+        const result = await collection.updateOne({ id: id }, { $set: data });
         if (result.modifiedCount) {
             res.json({ message: 'Document updated successfully' });
         } else {
@@ -64,12 +65,11 @@ app.put('/update/:id', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-
 // Delete
 app.delete('/delete/:id', async (req, res) => {
     try {
-        const id = req.params.id;
-        const result = await collection.deleteOne({ id: int(id) });
+        const id = parseInt(req.params.id); // Convert id to integer if needed
+        const result = await collection.deleteOne({ id: id });
         if (result.deletedCount) {
             res.json({ message: 'Document deleted successfully' });
         } else {
@@ -80,7 +80,6 @@ app.delete('/delete/:id', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
