@@ -53,7 +53,7 @@ app.put('/update/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const data = req.body;
-        const result = await collection.updateOne({ _id: ObjectID(id) }, { $set: data });
+        const result = await collection.updateOne({id: (int)(id) }, { $set: data });
         if (result.modifiedCount) {
             res.json({ message: 'Document updated successfully' });
         } else {
@@ -69,7 +69,7 @@ app.put('/update/:id', async (req, res) => {
 app.delete('/delete/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const result = await collection.deleteOne({ _id: ObjectID(id) });
+        const result = await collection.deleteOne({ id: (int)(id) });
         if (result.deletedCount) {
             res.json({ message: 'Document deleted successfully' });
         } else {
