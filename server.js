@@ -1,6 +1,10 @@
 const express = require('express');
-const { MongoClient, ObjectId } = require('mongodb');
+const { MongoClient } = require('mongodb');
+const cors = require('cors');
+
 const app = express();
+app.use(express.json());
+app.use(cors());
 
 const uri = "mongodb+srv://satya:satya@cluster0.8thgg4a.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -18,8 +22,6 @@ async function connectToMongo() {
 }
 
 connectToMongo();
-
-app.use(express.json());
 
 app.get('/', (req, res) => {
     res.json({ message: 'Server is running' });
@@ -65,6 +67,7 @@ app.put('/update/:id', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
 // Delete
 app.delete('/delete/:id', async (req, res) => {
     try {
@@ -80,6 +83,7 @@ app.delete('/delete/:id', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
